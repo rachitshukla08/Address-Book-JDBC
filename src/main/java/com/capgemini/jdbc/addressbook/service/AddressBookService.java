@@ -1,8 +1,10 @@
 package com.capgemini.jdbc.addressbook.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.capgemini.jdbc.addressbook.Contact;
+import com.capgemini.jdbc.addressbook.service.AddressBookDBService.CountType;
 
 public class AddressBookService {
 	
@@ -37,6 +39,10 @@ public class AddressBookService {
 
 	public List<Contact> getContactInDateRange(String start, String end) {
 		return addressBookDBService.getContactInDateRange(start,end);
+	}
+
+	public Map<String,Integer> getCountByCityState(CountType type) {
+		return addressBookDBService.getCountByCityState(type);
 	}
 
 }
