@@ -2,6 +2,7 @@ package com.capgemini.jdbc.addressbook.service;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,6 +15,7 @@ import com.capgemini.jdbc.addressbook.Contact;
 public class AddressBookDBService {
 	
 	private static AddressBookDBService addressBookDBService;
+	private PreparedStatement addressBookPreparedStatement;
 	
 	private AddressBookDBService() {
 	}
@@ -30,18 +32,73 @@ public class AddressBookDBService {
 		try(Connection connection = this.getConnection()){
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(sql);
+			contactList = this.getDataUsingResultSet(resultSet);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return contactList;
+	}
+	
+	/**
+	 * @param firstName
+	 * @param lastName
+	 * @param new phone number
+	 * @param new email 
+	 * @return number of rows affected
+	 */
+	public int updateContact(String firstName, String lastName, String phone, String email) {
+		int rowsAffected=0;
+		String sql = String.format("UPDATE address_book SET phone = '%s',email = '%s' "
+				+ "WHERE first_name = '%s' AND last_name = '%s';",phone,email,firstName,lastName);
+		try(Connection connection = this.getConnection()){
+			Statement statement = connection.createStatement();
+			rowsAffected = statement.executeUpdate(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return rowsAffected;
+	}
+	
+	/**
+	 * @param firstName
+	 * @param lastName
+	 * @return ContactList for a particular name
+	 */
+	public List<Contact> getContactDetailsDB(String firstName,String lastName){
+		List<Contact> contactList = new ArrayList<Contact>();
+		try {
+			Connection connection = this.getConnection();
+			String sql = "Select * from address_book WHERE first_name = ? AND last_name = ?;";
+			addressBookPreparedStatement = connection.prepareStatement(sql);
+			addressBookPreparedStatement.setString(1, firstName);
+			addressBookPreparedStatement.setString(2, lastName);
+			ResultSet resultSet = addressBookPreparedStatement.executeQuery();
+			contactList = this.getDataUsingResultSet(resultSet);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return contactList;
+	}
+	
+	/**
+	 * @param resultSet
+	 * @return contact list 
+	 */
+	private List<Contact> getDataUsingResultSet(ResultSet resultSet){
+		List<Contact> contactList = new ArrayList<Contact>();
+		try {
 			while(resultSet.next()) {
-				String firstName = resultSet.getString("first_name");
-				String lastName = resultSet.getString("last_name");
+				String first_Name = resultSet.getString("first_name");
+				String last_Name = resultSet.getString("last_name");
 				String address = resultSet.getString("address");
 				String city = resultSet.getString("city");
 				String state = resultSet.getString("state");
 				String zip = resultSet.getString("zip");
 				String phoneNo = resultSet.getString("phone");
 				String email = resultSet.getString("email");
-				Contact contact = new Contact(firstName, lastName, address, city, state, zip, phoneNo, email);
+				Contact contact = new Contact(first_Name, last_Name, address, city, state, zip, phoneNo, email);
 				contactList.add(contact);
-				}
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
