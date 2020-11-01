@@ -1,6 +1,7 @@
 package com.capgemini.jdbc.addressbook;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * @author Rachit
@@ -108,11 +109,42 @@ public class Contact {
 		this.email = email;
 	}
 
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(firstName,lastName);
+	}
+	
+	@Override
 	public String toString() {
 		return "First name="+firstName + ",Last name=" + lastName + ",Address=" + address + ",City=" + city + ",State=" + state + ",Zip=" + zip + ",Phone No="
 				+ phoneNo + ",Email=" + email + "\n";
 	}
-
+	
+	@Override
 	public boolean equals(Object o) {
 		Contact contact = (Contact) o;
 		if ((this.firstName).equals(contact.firstName) && (this.lastName.equals(contact.lastName)))

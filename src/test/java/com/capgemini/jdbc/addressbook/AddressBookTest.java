@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -69,6 +70,7 @@ public class AddressBookTest {
 	
 	@Test
 	public void given3Contacts_WhenAddedToDatabase_ShouldMatchContactEntries() {
+		addressBookService.readData();
 		Contact[] contacts = {
 				new Contact("Mark", "Zuckerberg", "Street 200", "NY", "New York", "456781", "9292929292",
 				"mark@email.com",LocalDate.now(),"name","Friend"),
@@ -77,5 +79,8 @@ public class AddressBookTest {
 				new Contact("Jeff", "Bezos", "Street 200", "City 8", "Washington", "456781", "7292929292",
 						"jeff@email.com",LocalDate.now(),"name","Family")
 				};
+		addressBookService.addContacts(Arrays.asList(contacts));
+		List<Contact> newList = addressBookService.readData();
+		assertEquals(9, newList.size());
 	}
 }
