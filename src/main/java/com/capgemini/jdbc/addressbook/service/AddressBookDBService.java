@@ -59,6 +59,25 @@ public class AddressBookDBService {
 		return rowsAffected;
 	}
 	
+
+	/**
+	 * @param start
+	 * @param end
+	 * @return contact list in given date range
+	 */
+	public List<Contact> getContactInDateRange(String start, String end) {
+		List<Contact> contactList = new ArrayList<Contact>();
+		String sql = String.format("SELECT * FROM address_book where date_added BETWEEN '%s' AND '%s'",start,end);
+		try(Connection connection = this.getConnection()){
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			contactList = this.getDataUsingResultSet(resultSet);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return contactList;
+	}
+	
 	/**
 	 * @param firstName
 	 * @param lastName
