@@ -63,5 +63,19 @@ public class AddressBookTest {
 		addressBookService.readData();
 		addressBookService.addContact("Rachit", "Shukla", "Street 190", "Bhopal", "MP", "456789", "9191919191",
 				"rachit@email.com",LocalDate.now(),"name","Family");
+		boolean result = addressBookService.checkEmployeePayrollInSyncWithDB("Rachit", "Shukla");
+		assertTrue(result);
+	}
+	
+	@Test
+	public void given3Contacts_WhenAddedToDatabase_ShouldMatchContactEntries() {
+		Contact[] contacts = {
+				new Contact("Mark", "Zuckerberg", "Street 200", "NY", "New York", "456781", "9292929292",
+				"mark@email.com",LocalDate.now(),"name","Friend"),
+				new Contact("Bill", "Gates", "Street 250", "Medina", "Washington", "666781", "8892929291",
+						"mark@email.com",LocalDate.now(),"name","Friend"),
+				new Contact("Jeff", "Bezos", "Street 200", "City 8", "Washington", "456781", "7292929292",
+						"jeff@email.com",LocalDate.now(),"name","Family")
+				};
 	}
 }
