@@ -11,6 +11,9 @@ import com.capgemini.jdbc.addressbook.service.AddressBookDBService.CountType;
 
 public class AddressBookService {
 	
+	public enum IOService{
+		DB_IO,REST_IO
+	}
 	List<Contact> addressBookList;
 	AddressBookDBService addressBookDBService = AddressBookDBService.getInstance();
 	
@@ -26,6 +29,13 @@ public class AddressBookService {
 		return addressBookList;
 	}
 
+	/**
+	 * @param firstName
+	 * @param lastName
+	 * @param phone
+	 * @param email
+	 * @return true if contact is successfully updated
+	 */
 	public boolean updateContact(String firstName, String lastName, String phone, String email) {
 		int rows = addressBookDBService.updateContact(firstName,lastName,phone,email);
 		if(rows>0)
@@ -126,6 +136,18 @@ public class AddressBookService {
 	 */
 	public long countEntries() {
 		return addressBookList.size();
+	}
+
+	public void addContact(Contact contact, IOService ioService) {
+		if(ioService.equals(IOService.DB_IO)) {
+			this.addContact(contact.getFirstName(), contact.getLastName(), contact.getAddress(), contact.getCity()
+					, contact.getState(), contact.getZip(), contact.getPhoneNo(), contact.getEmail(), 
+					contact.getDate(), contact.getName(), contact.getType());
+		}
+		else if(ioService.equals(IOService.REST_IO)) {
+			addressBookList.add(contact);
+		}
+			
 	}
 
 }

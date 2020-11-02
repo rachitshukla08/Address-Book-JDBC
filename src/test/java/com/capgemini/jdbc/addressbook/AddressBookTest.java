@@ -10,13 +10,15 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import com.capgemini.jdbc.addressbook.service.AddressBookService;
 import com.capgemini.jdbc.addressbook.service.AddressBookDBService.CountType;
 import com.google.gson.Gson;
 
+import com.capgemini.jdbc.addressbook.service.AddressBookService.IOService;
+
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
 public class AddressBookTest {
 
@@ -115,7 +117,35 @@ public class AddressBookTest {
 		AddressBookService addressBookService;
 		addressBookService = new AddressBookService(Arrays.asList(arrayOfContacts));
 		long entries = addressBookService.countEntries();
-		assertEquals(3, entries);
+		assertEquals(4, entries);
+	}
+	
+	@Test
+	public void givenNewContact_WhenAdded_ShouldMatch201ResponseAndCount() {
+		Contact[] arrayOfEmps = getContactList();
+		AddressBookService addressBookService = new AddressBookService(Arrays.asList(arrayOfEmps));
+		Contact contact = new Contact(0,"Mark", "Zuckerberg", "Street 190", "Bhopal", "MP", "444444", "7777777777",
+				"Mark@email.com", LocalDate.now(), "Address Book 2", "Family");
+		Response response  = addContactToJSONServer(contact);
+		int statusCode = response.getStatusCode();
+		assertEquals(201, statusCode);
+		contact = new Gson().fromJson(response.asString(), Contact.class);
+		addressBookService.addContact(contact,IOService.REST_IO);
+		assertEquals(4, addressBookService.countEntries());
+	}
+
+	/**
+	 * @param contact
+	 * @return response
+	 */
+	private Response addContactToJSONServer(Contact contact) {
+		System.out.println(contact);
+		String contactJson = new Gson().toJson(contact);
+		System.out.println(contactJson);
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type","application/json");
+		request.body(contactJson);
+		return request.post("/contacts");
 	}
 	
 	
