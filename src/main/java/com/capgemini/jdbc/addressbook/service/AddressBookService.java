@@ -1,5 +1,6 @@
 package com.capgemini.jdbc.addressbook.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,13 @@ public class AddressBookService {
 	List<Contact> addressBookList;
 	AddressBookDBService addressBookDBService = AddressBookDBService.getInstance();
 	
+	public AddressBookService() {
+	}
+	
+	public AddressBookService(List<Contact> contactList) {
+		this.addressBookList = new ArrayList<>(contactList);
+	}
+
 	public List<Contact> readData() {
 		addressBookList = addressBookDBService.readData();
 		return addressBookList;
@@ -25,12 +33,22 @@ public class AddressBookService {
 		return false;
 	}
 	
-	public boolean checkEmployeePayrollInSyncWithDB(String firstName,String lastName) {
+	/**
+	 * @param firstName
+	 * @param lastName
+	 * @return if contact is present
+	 */
+	public boolean checkAddressBookInSyncWithDB(String firstName,String lastName) {
 		 List<Contact> checkList = addressBookDBService.getContactDetailsDB(firstName, lastName);
 		return checkList.get(0).equals(getContactDetails(firstName, lastName));
 		
 	}
 	
+	/**
+	 * @param firstName
+	 * @param lastName
+	 * @return contact details of a given contact
+	 */
 	private Contact getContactDetails(String firstName,String lastName) {
 		Contact contactData = this.addressBookList.stream()
 				.filter(employee->employee.getFirstName().equals(firstName)&&employee.getLastName().equals(lastName))
@@ -39,14 +57,37 @@ public class AddressBookService {
 		return contactData;
 	}
 
+	/**
+	 * @param start
+	 * @param end
+	 * @return List of contacts in a given date range
+	 */
 	public List<Contact> getContactInDateRange(String start, String end) {
 		return addressBookDBService.getContactInDateRange(start,end);
 	}
 
+	/**
+	 * @param type
+	 * @return number of contacts by city or state
+	 */
 	public Map<String,Integer> getCountByCityState(CountType type) {
 		return addressBookDBService.getCountByCityState(type);
 	}
 
+	/**
+	 * Add a new contact to DB
+	 * @param firstName
+	 * @param lastName
+	 * @param address
+	 * @param city
+	 * @param state
+	 * @param zip
+	 * @param phone
+	 * @param email
+	 * @param date
+	 * @param name
+	 * @param type
+	 */
 	public void addContact(String firstName, String lastName, String address, String city, String state,
 			String zip, String phone, String email,LocalDate date,String name,String type) {
 		addressBookList.add(addressBookDBService.addContact(firstName,lastName,address,city,state,zip,phone,email,date,name,type));
@@ -78,6 +119,13 @@ public class AddressBookService {
 			}
 		}
 		System.out.println(addressBookList);
+	}
+
+	/**
+	 * @return size of address book list
+	 */
+	public long countEntries() {
+		return addressBookList.size();
 	}
 
 }

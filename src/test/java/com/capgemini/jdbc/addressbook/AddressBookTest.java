@@ -13,6 +13,10 @@ import org.junit.Test;
 
 import com.capgemini.jdbc.addressbook.service.AddressBookService;
 import com.capgemini.jdbc.addressbook.service.AddressBookDBService.CountType;
+import com.google.gson.Gson;
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
 
 public class AddressBookTest {
 
@@ -35,7 +39,7 @@ public class AddressBookTest {
 		addressBookService.readData();
 		boolean isUpdated = addressBookService.updateContact("Bill", "Smith", "123456789", "BillSmith@email.com");
 		addressBookService.readData();
-		boolean result = addressBookService.checkEmployeePayrollInSyncWithDB("Bill", "Smith");
+		boolean result = addressBookService.checkAddressBookInSyncWithDB("Bill", "Smith");
 		assertTrue(result && isUpdated);
 	}
 
@@ -64,7 +68,7 @@ public class AddressBookTest {
 		addressBookService.readData();
 		addressBookService.addContact("Rachit", "Shukla", "Street 190", "Bhopal", "MP", "456789", "9191919191",
 				"rachit@email.com",LocalDate.now(),"name","Family");
-		boolean result = addressBookService.checkEmployeePayrollInSyncWithDB("Rachit", "Shukla");
+		boolean result = addressBookService.checkAddressBookInSyncWithDB("Rachit", "Shukla");
 		assertTrue(result);
 	}
 	
@@ -83,4 +87,36 @@ public class AddressBookTest {
 		List<Contact> newList = addressBookService.readData();
 		assertEquals(9, newList.size());
 	}
+	
+	//REST API TESTS:
+	
+	/**
+	 * Initial setup of baseURI and port of RestAssured
+	 */
+	@Before
+	public void setup() {
+		RestAssured.baseURI = "http://localhost";
+		RestAssured.port = 3000;
+	}
+	
+	/**
+	 * @return Array of contacts
+	 */
+	public Contact[] getContactList() {
+		Response response = RestAssured.get("/contacts");
+		System.out.println("Employee entries in JSON SERVER : "+response.asString());
+		Contact[] arrayOfEmps = new Gson().fromJson(response.asString(), Contact[].class);
+		return arrayOfEmps;
+	}
+	
+	@Test
+	public void givenContactsInJSONServer_WhenRetrieved_ShouldMatchTheCount() {
+		Contact[] arrayOfContacts = getContactList();
+		AddressBookService addressBookService;
+		addressBookService = new AddressBookService(Arrays.asList(arrayOfContacts));
+		long entries = addressBookService.countEntries();
+		assertEquals(3, entries);
+	}
+	
+	
 }
