@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.time.LocalDate;
 
-import com.capgemini.jdbc.addressbook.Contact;
+import com.capgemini.jdbc.addressbook.model.Contact;
 import com.capgemini.jdbc.addressbook.service.AddressBookDBService.CountType;
 
 public class AddressBookService {

@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.capgemini.jdbc.addressbook.Contact;
 import com.capgemini.jdbc.addressbook.ReadWriteService;
+import com.capgemini.jdbc.addressbook.model.Contact;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.StatefulBeanToCsv;

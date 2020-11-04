@@ -10,6 +10,8 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.capgemini.jdbc.addressbook.model.Contact;
 import com.capgemini.jdbc.addressbook.service.AddressBookService;
 import com.capgemini.jdbc.addressbook.service.AddressBookDBService.CountType;
 import com.google.gson.Gson;
@@ -33,14 +35,13 @@ public class AddressBookTest {
 	public void givenAddressBookData_WhenRetreived_ShouldRetrieveAllContacts() {
 		List<Contact> contactList = addressBookService.readData();
 		System.out.println(contactList);
-		assertEquals(5, contactList.size());
+		assertEquals(9, contactList.size());
 	}
 
 	@Test
 	public void givenContactDetails_WhenUpdated_ShouldSyncWithDB() {
 		addressBookService.readData();
 		boolean isUpdated = addressBookService.updateContact("Bill", "Smith", "123456789", "BillSmith@email.com");
-		addressBookService.readData();
 		boolean result = addressBookService.checkAddressBookInSyncWithDB("Bill", "Smith");
 		assertTrue(result && isUpdated);
 	}

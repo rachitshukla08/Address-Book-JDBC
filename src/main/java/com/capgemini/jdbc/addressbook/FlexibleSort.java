@@ -2,6 +2,8 @@ package com.capgemini.jdbc.addressbook;
 
 import java.util.Comparator;
 
+import com.capgemini.jdbc.addressbook.model.Contact;
+
 public class FlexibleSort implements Comparator<Contact> {
 	public enum Order{NAME,CITY,STATE,ZIP}
 	

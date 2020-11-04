@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import com.capgemini.jdbc.addressbook.model.Contact;
 import com.capgemini.jdbc.addressbook.service.AddressBookCSVService;
 import com.capgemini.jdbc.addressbook.service.AddressBookJSONService;
 

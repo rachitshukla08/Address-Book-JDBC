@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.capgemini.jdbc.addressbook.Contact;
 import com.capgemini.jdbc.addressbook.ReadWriteService;
+import com.capgemini.jdbc.addressbook.model.Contact;
 
 public class AddressBookIOService implements ReadWriteService {
 	private static String HOME = "D:\\eclipse_workspace\\Address Book Collections\\src\\com\\capgemini\\collections\\addressbook\\Address Books";

@@ -1,4 +1,4 @@
-package com.capgemini.jdbc.addressbook;
+package com.capgemini.jdbc.addressbook.model;
 
 import java.time.LocalDate;
 import java.util.Objects;

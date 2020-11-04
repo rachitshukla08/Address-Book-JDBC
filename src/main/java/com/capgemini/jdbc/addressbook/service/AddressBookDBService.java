@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.capgemini.jdbc.addressbook.Contact;
+import com.capgemini.jdbc.addressbook.model.Contact;
 
 
 public class AddressBookDBService {
@@ -73,9 +73,9 @@ public class AddressBookDBService {
 	 * @param end
 	 * @return contact list in given date range
 	 */
-	public List<Contact> getContactInDateRange(String start, String end) {
+	public List<Contact> getContactInDateRange(String startDate, String endDate) {
 		List<Contact> contactList = new ArrayList<Contact>();
-		String sql = String.format("SELECT * FROM address_book where date_added BETWEEN '%s' AND '%s'",start,end);
+		String sql = String.format("SELECT * FROM address_book where date_added BETWEEN '%s' AND '%s'",startDate,endDate);
 		try(Connection connection = this.getConnection()){
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(sql);
@@ -182,12 +182,15 @@ public class AddressBookDBService {
 		return contactList;
 	}
 	
+	/**
+	 * @return Connection
+	 * @throws SQLException
+	 */
 	private Connection getConnection() throws SQLException {
-		String jdbcURL = "jdbc:mysql://localhost:3306/address_book_service?useSSL=false";
-		String userName = "root";
-		String password = "root";
-		Connection connection;
-		connection = DriverManager.getConnection(jdbcURL, userName, password);
+		final String jdbcURL = "jdbc:mysql://localhost:3306/address_book_service?useSSL=false";
+		final String userName = "root";
+		final String password = "root";
+		Connection connection = DriverManager.getConnection(jdbcURL, userName, password);
 		System.out.println("Connection established: "+connection);
 		return connection;
 	}
