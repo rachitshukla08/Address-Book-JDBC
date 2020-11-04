@@ -63,6 +63,17 @@ public class AddressBookTest {
 		List<Contact> contactList = addressBookService.getContactInDateRange("2019-01-19", "2020-01-19");
 		assertEquals(2, contactList.size());
 	}
+	
+	@Test
+	public void givenDateRange_WhenNoContactsInThatRange_ShouldThrowException() {
+		addressBookService.readData();
+		try {
+			addressBookService.getContactInDateRange("2021-01-19", "2022-01-19");
+		} catch (AddressBookException e) {
+			System.out.println(e.getMessage());
+			assertEquals(AddressBookException.ExceptionType.NO_DATA_AVAILABLE, e.type);
+		}
+	}
 
 	@Test
 	public void givenStateOrCity_ShouldRetrieveCountOfContactsInThatCityOrState() {

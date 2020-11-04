@@ -94,7 +94,7 @@ public class AddressBookService {
 		if(contacts.size()>0)
 			return contacts;
 		else 
-			throw new AddressBookException(ExceptionType.NO_DATA_AVAILABLE, "Contact does not exist. Update failed");
+			throw new AddressBookException(ExceptionType.NO_DATA_AVAILABLE, "No data available for given date range");
 	}
 
 	/**
