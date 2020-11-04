@@ -107,24 +107,6 @@
       },
       "name": "Address Book 2",
       "type": "Family"
-    },
-    {
-      "id": 7,
-      "firstName": "Anil",
-      "lastName": "Ambani",
-      "address": "Street 112",
-      "city": "Mumbai",
-      "state": "Maharashtra",
-      "zip": "312351",
-      "phoneNo": "9876543210",
-      "email": "anilambani@email.com",
-      "date": {
-        "year": 2020,
-        "month": 11,
-        "day": 4
-      },
-      "name": "Address Book 3",
-      "type": "Friend"
     }
   ]
 }

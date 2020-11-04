@@ -139,6 +139,13 @@ public class AddressBookService {
 		}
 		System.out.println(addressBookList);
 	}
+	
+	public void deleteContactJSONServer(String firstName, String lastName, IOService ioService) {
+		if(ioService.equals(IOService.REST_IO)) {
+			Contact contactData = this.getContactDetails(firstName, lastName);
+			addressBookList.remove(contactData);
+		}
+	}
 
 	/**
 	 * @return size of address book list
