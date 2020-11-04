@@ -71,6 +71,60 @@
       },
       "name": "Address Book 2",
       "type": "Family"
+    },
+    {
+      "id": 5,
+      "firstName": "Bill",
+      "lastName": "Gates",
+      "address": "Street 225",
+      "city": "Medina",
+      "state": "Washington",
+      "zip": "434343",
+      "phoneNo": "8888877777",
+      "email": "Bill@email.com",
+      "date": {
+        "year": 2020,
+        "month": 11,
+        "day": 4
+      },
+      "name": "Address Book 2",
+      "type": "Family"
+    },
+    {
+      "id": 6,
+      "firstName": "Jeff",
+      "lastName": "Bezos",
+      "address": "Street 219",
+      "city": "XYZ",
+      "state": "New York",
+      "zip": "545455",
+      "phoneNo": "7799997777",
+      "email": "Jeff@email.com",
+      "date": {
+        "year": 2020,
+        "month": 11,
+        "day": 4
+      },
+      "name": "Address Book 2",
+      "type": "Family"
+    },
+    {
+      "id": 7,
+      "firstName": "Anil",
+      "lastName": "Ambani",
+      "address": "Street 112",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "zip": "312351",
+      "phoneNo": "9976673371",
+      "email": "Anil@email.com",
+      "date": {
+        "year": 2020,
+        "month": 11,
+        "day": 4
+      },
+      "name": "Address Book 3",
+      "type": "Friend"
     }
   ]
 }

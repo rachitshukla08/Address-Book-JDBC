@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -139,7 +140,7 @@ public class AddressBookTest {
 	 * @param contact
 	 * @return response
 	 */
-	private Response addContactToJSONServer(Contact contact) {
+	private synchronized Response addContactToJSONServer(Contact contact) {
 		System.out.println(contact);
 		String contactJson = new Gson().toJson(contact);
 		System.out.println(contactJson);
@@ -149,5 +150,43 @@ public class AddressBookTest {
 		return request.post("/contacts");
 	}
 	
-	
+	// UC23 REST
+	@Test
+	public void given3Contacts_WhenAdded_ShouldMatchCount() {
+		Contact[] arrayOfContacts = getContactList();
+		AddressBookService addressBookService = new AddressBookService(Arrays.asList(arrayOfContacts));
+		Contact[] arrayOfContactToAdd = {
+				new Contact(0, "Bill", "Gates", "Street 225", "Medina", "Washington", "434343", "8888877777",
+						"Bill@email.com", LocalDate.now(), "Address Book 2", "Family"),
+				new Contact(0, "Jeff", "Bezos", "Street 219", "XYZ", "New York", "545455", "7799997777",
+						"Jeff@email.com", LocalDate.now(), "Address Book 2", "Family"),
+				new Contact(0, "Anil", "Ambani", "Street 112", "Mumbai", "Maharashtra", "312351", "9976673371",
+						"Anil@email.com", LocalDate.now(), "Address Book 3", "Friend") };
+		addContactsToJSONWithThreads(Arrays.asList(arrayOfContactToAdd));
+		arrayOfContacts = getContactList();
+		addressBookService = new AddressBookService(Arrays.asList(arrayOfContacts));
+		assertEquals(7, addressBookService.countEntries());
+	}
+
+	public void addContactsToJSONWithThreads(List<Contact> contactList) {
+		Map<String, Boolean> contactAdditionStatus = new HashMap<String, Boolean>();
+		contactList.forEach(contact -> {
+			Runnable task = () -> {
+				contactAdditionStatus.put(contact.getFirstName(), false);
+				System.out.println("Contact being added:(threads) " + Thread.currentThread().getName());
+				this.addContactToJSONServer(contact);
+				contactAdditionStatus.put(contact.getFirstName(), true);
+				System.out.println("Contact added: (threads)" + Thread.currentThread().getName());
+			};
+			Thread thread = new Thread(task, contact.getFirstName());
+			thread.start();
+		});
+		while (contactAdditionStatus.containsValue(false)) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
