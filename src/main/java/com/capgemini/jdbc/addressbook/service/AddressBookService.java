@@ -100,9 +100,15 @@ public class AddressBookService {
 	/**
 	 * @param type
 	 * @return number of contacts by city or state
+	 * @throws AddressBookException 
 	 */
-	public Map<String,Integer> getCountByCityState(CountType type) {
-		return addressBookDBService.getCountByCityState(type);
+	public Map<String,Integer> getCountByCityState(CountType type) throws AddressBookException {
+		Map<String,Integer> countMap;
+		if(type.equals(CountType.CITY)||type.equals(CountType.STATE)) 
+			countMap = addressBookDBService.getCountByCityState(type);
+		else 
+			throw new AddressBookException(ExceptionType.WRONG_TYPE, "Wrong type queried");
+		return countMap;
 	}
 
 	/**

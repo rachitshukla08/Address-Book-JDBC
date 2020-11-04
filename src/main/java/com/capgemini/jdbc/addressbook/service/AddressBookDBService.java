@@ -25,7 +25,7 @@ public class AddressBookDBService {
 	}
 	
 	public enum CountType{
-		CITY,STATE
+		CITY,STATE,OTHER
 	}
 	
 	public static AddressBookDBService getInstance() {

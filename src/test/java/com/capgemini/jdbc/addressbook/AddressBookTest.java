@@ -76,7 +76,7 @@ public class AddressBookTest {
 	}
 
 	@Test
-	public void givenStateOrCity_ShouldRetrieveCountOfContactsInThatCityOrState() {
+	public void givenStateOrCity_ShouldRetrieveCountOfContactsInThatCityOrState() throws AddressBookException {
 		addressBookService.readData();
 		Map<String, Integer> cityMap = addressBookService.getCountByCityState(CountType.CITY);
 		Map<String, Integer> stateMap = addressBookService.getCountByCityState(CountType.STATE);
@@ -86,6 +86,17 @@ public class AddressBookTest {
 		int stateCount = stateMap.get("California");
 		boolean isValid = cityCount == 3 && stateCount == 4;
 		assertTrue(isValid);
+	}
+	
+	@Test
+	public void givenWrongCountType_ShouldThrowException() {
+		addressBookService.readData();
+		try {
+			addressBookService.getCountByCityState(CountType.OTHER);
+		} catch (AddressBookException e) {
+			System.out.println(e.getMessage());
+			assertEquals(AddressBookException.ExceptionType.WRONG_TYPE, e.type);
+		}
 	}
 
 	@Test
