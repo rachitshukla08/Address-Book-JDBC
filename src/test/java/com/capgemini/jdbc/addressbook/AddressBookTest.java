@@ -40,15 +40,25 @@ public class AddressBookTest {
 	}
 
 	@Test
-	public void givenContactDetails_WhenUpdated_ShouldSyncWithDB() {
+	public void givenContactDetails_WhenUpdated_ShouldSyncWithDB() throws AddressBookException {
 		addressBookService.readData();
 		boolean isUpdated = addressBookService.updateContact("Bill", "Smith", "123456789", "BillSmith@email.com",IOService.DB_IO);
 		boolean result = addressBookService.checkAddressBookInSyncWithDB("Bill", "Smith");
 		assertTrue(result && isUpdated);
 	}
+	
+	@Test
+	public void givenContactDetails_WhenNotPresent_ShouldThrowException() {
+		addressBookService.readData();
+		try {
+			addressBookService.updateContact("ABC", "XYZ", "123456789", "BillSmith@email.com",IOService.DB_IO);
+		} catch (AddressBookException e) {
+			assertEquals(AddressBookException.ExceptionType.UPDATE_FAILED, e.type);
+		}
+	}
 
 	@Test
-	public void givenDateRange_ShouldRetrieveContactsInThatRange() {
+	public void givenDateRange_ShouldRetrieveContactsInThatRange() throws AddressBookException {
 		addressBookService.readData();
 		List<Contact> contactList = addressBookService.getContactInDateRange("2019-01-19", "2020-01-19");
 		assertEquals(2, contactList.size());
@@ -192,7 +202,7 @@ public class AddressBookTest {
 	
 	// UC24
 	@Test
-	public void givenNewContactData_WhenUpdated_ShouldMatch200Response() {
+	public void givenNewContactData_WhenUpdated_ShouldMatch200Response() throws AddressBookException {
 		Contact[] arrayOfContacts = getContactList();
 		AddressBookService addressBookService = new AddressBookService(Arrays.asList(arrayOfContacts));
 		addressBookService.updateContact("Anil","Ambani","9876543210","anilambani@email.com",IOService.REST_IO);

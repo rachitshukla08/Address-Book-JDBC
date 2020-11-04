@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.time.LocalDate;
 
+import com.capgemini.jdbc.addressbook.AddressBookException;
+import com.capgemini.jdbc.addressbook.AddressBookException.ExceptionType;
 import com.capgemini.jdbc.addressbook.model.Contact;
 import com.capgemini.jdbc.addressbook.service.AddressBookDBService.CountType;
 
@@ -35,12 +37,15 @@ public class AddressBookService {
 	 * @param phone
 	 * @param email
 	 * @return true if contact is successfully updated
+	 * @throws AddressBookException 
 	 */
-	public boolean updateContact(String firstName, String lastName, String phone, String email,IOService ioService) {
+	public boolean updateContact(String firstName, String lastName, String phone, String email,IOService ioService) throws AddressBookException {
 		if(ioService.equals(IOService.DB_IO)) {
 			int rows = addressBookDBService.updateContact(firstName,lastName,phone,email);
 			if(rows>0)
 				return true;
+			else 
+				throw new AddressBookException(ExceptionType.UPDATE_FAILED, "Contact does not exist. Update failed");
 		}
 		else if(ioService.equals(IOService.REST_IO)) {
 			Contact contactData = this.getContactDetails(firstName, lastName);
@@ -49,6 +54,8 @@ public class AddressBookService {
 				contactData.setPhoneNo(phone);
 				return true;
 			}
+			else 
+				throw new AddressBookException(ExceptionType.UPDATE_FAILED, "Contact does not exist. Update failed");
 		}
 		return false;
 	}
@@ -80,9 +87,14 @@ public class AddressBookService {
 	 * @param start
 	 * @param end
 	 * @return List of contacts in a given date range
+	 * @throws AddressBookException 
 	 */
-	public List<Contact> getContactInDateRange(String start, String end) {
-		return addressBookDBService.getContactInDateRange(start,end);
+	public List<Contact> getContactInDateRange(String start, String end) throws AddressBookException {
+		List<Contact> contacts = addressBookDBService.getContactInDateRange(start,end);
+		if(contacts.size()>0)
+			return contacts;
+		else 
+			throw new AddressBookException(ExceptionType.NO_DATA_AVAILABLE, "Contact does not exist. Update failed");
 	}
 
 	/**
