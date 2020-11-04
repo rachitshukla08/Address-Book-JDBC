@@ -36,10 +36,20 @@ public class AddressBookService {
 	 * @param email
 	 * @return true if contact is successfully updated
 	 */
-	public boolean updateContact(String firstName, String lastName, String phone, String email) {
-		int rows = addressBookDBService.updateContact(firstName,lastName,phone,email);
-		if(rows>0)
-			return true;
+	public boolean updateContact(String firstName, String lastName, String phone, String email,IOService ioService) {
+		if(ioService.equals(IOService.DB_IO)) {
+			int rows = addressBookDBService.updateContact(firstName,lastName,phone,email);
+			if(rows>0)
+				return true;
+		}
+		else if(ioService.equals(IOService.REST_IO)) {
+			Contact contactData = this.getContactDetails(firstName, lastName);
+			if(contactData!=null) {
+				contactData.setEmail(email);
+				contactData.setPhoneNo(phone);
+				return true;
+			}
+		}
 		return false;
 	}
 	
@@ -51,7 +61,6 @@ public class AddressBookService {
 	public boolean checkAddressBookInSyncWithDB(String firstName,String lastName) {
 		 List<Contact> checkList = addressBookDBService.getContactDetailsDB(firstName, lastName);
 		return checkList.get(0).equals(getContactDetails(firstName, lastName));
-		
 	}
 	
 	/**
@@ -59,7 +68,7 @@ public class AddressBookService {
 	 * @param lastName
 	 * @return contact details of a given contact
 	 */
-	private Contact getContactDetails(String firstName,String lastName) {
+	public Contact getContactDetails(String firstName,String lastName) {
 		Contact contactData = this.addressBookList.stream()
 				.filter(employee->employee.getFirstName().equals(firstName)&&employee.getLastName().equals(lastName))
 				.findFirst()
@@ -149,5 +158,4 @@ public class AddressBookService {
 		}
 			
 	}
-
 }
