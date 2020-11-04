@@ -165,7 +165,7 @@ public class AddressBookTest {
 		addContactsToJSONWithThreads(Arrays.asList(arrayOfContactToAdd));
 		arrayOfContacts = getContactList();
 		addressBookService = new AddressBookService(Arrays.asList(arrayOfContacts));
-		assertEquals(7, addressBookService.countEntries());
+		assertEquals(Arrays.asList(arrayOfContacts), addressBookService.countEntries());
 	}
 
 	public void addContactsToJSONWithThreads(List<Contact> contactList) {
